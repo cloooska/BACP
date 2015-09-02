@@ -56,40 +56,12 @@ typedef struct _sol
 
 typedef tipoSol *pSol;
 
-//getters info general
-int getCantCursos(malla m)
-{
-	return m->cant_cursos;
-}
-
-int getCantPeriodos(malla m)
-{
-	return m->cant_periodos;
-}
-
-int getMinCreditos(malla m)
-{
-	return m->min_creditos;
-}
-
-int getMaxCreditos(malla m)
-{
-	return m->max_creditos;
-}
-
-int getMinCursos(malla m)
-{
-	return m->min_cursos;
-}
-
-int getMaxCursos(malla m)
-{
-	return m->max_cursos;
-}
-
-int getTotalPrereq(malla m)
-{
-	return m->total_prerrequisitos;
-}
+int getCantCursos(malla m);
+int getCantPeriodos(malla m);
+int getMinCreditos(malla m);
+int getMaxCreditos(malla m);
+int getMinCursos(malla m);
+int getMaxCursos(malla m);
+int getTotalPrereq(malla m);
 
 #endif
