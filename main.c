@@ -5,8 +5,8 @@
  ROL         : 201073562-1
  =====================================================
  */
-#include "Librerias/greedy.h"
 #include "Librerias/general.h"
+#include "Librerias/greedy.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -104,4 +104,3 @@ int main(int argc,char *argv[])
 	free(nuevo_pr);
 	return 0;
 }
-
