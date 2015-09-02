@@ -80,7 +80,6 @@ int main(int argc,char *argv[])
 		{
 			aux=aux->sig;
 		}
-		printf("curso: %d pr: %d\n",aux->num_curso,b);
 		aux->cant_prerrequisitos++;
 		if(aux->sigPR==NULL)
 		{
