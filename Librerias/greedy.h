@@ -11,5 +11,7 @@ void appendCur(int curso,pSol per_actual);
 void marcarCurso(pCurso cursos,int curso,int flag);
 void marcarPR(pCurso cursos,int curso);
 void limpiarFallidos(pCurso cursos);
+void showCursos(pCurso cursos);
+void showPrerrequisitos(pCurso cursos,int numero);
 
 #endif
