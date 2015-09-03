@@ -2,6 +2,7 @@
 #include "Librerias/greedy.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 
 //GREEDY -> Solucion Inicial para el SA
@@ -18,49 +19,91 @@ pSol Greedy2(malla m,pCurso cursos)
 	solucion->creditos=0;
 	solucion->sig=NULL;
 	solucion->sigcur=NULL;
-	int i,cantPer=getCantPeriodos(m);
+	int i,noAsignados,cantPer=getCantPeriodos(m);
 	solucion->sig=NULL;
 	solucion->sigcur=NULL;
 	pSol aux=solucion;
 	pCurso prueba;
 	int cu=0;
-	int verificador;
-	int promCursos=getCantCursos(m)/cantPer;
+	//int promCursos=getCantCursos(m)/cantPer;
 	int maxCr=getMaxCreditos(m);
-	for( i=1 ; i<=cantPer ; i++ )
+	//int minCr=getMinCreditos(m);
+	int maxCu=getMaxCursos(m);
+	//int minCu=getMinCursos(m);
+	int promCr=mediaCreditos(cursos,m);
+	//primer periodo
+	while(aux->creditos<=maxCr && ++cu<=maxCu)
 	{
-		appendPeriodo(solucion,i);
-		while(aux->sig!=NULL)
-			aux=aux->sig;
-		while(aux->creditos<=maxCr && ++cu<=promCursos)
+		prueba=buscarCurso(cursos);
+		if(aux->creditos+prueba->cant_creditos<=promCr)
 		{
-			verificador=1;
-			while(verificador==1)
-			{
-				prueba=buscarCurso(cursos);
-				//printf(" num curso prueba %d\n", prueba->num_curso);
-				if(prueba!=NULL)
-				{
-					if(prueba->cant_creditos+aux->creditos<=maxCr)
-					{
-						appendCur(prueba->num_curso,aux);
-						aux->creditos=prueba->cant_creditos+aux->creditos;
-						verificador=0;
-						marcarCurso(cursos,prueba->num_curso,0);
-						marcarPR(cursos,prueba->num_curso);
-						limpiarFallidos(cursos);
-					}
-					else{
-						prueba->flag=2;
-						printf("entre aqui\n");
-					}
-				}
-			}
-			cu=0;
+			appendCur(prueba->num_curso,aux);
+			marcarCurso(cursos,prueba->num_curso,0);
+			marcarPR(cursos,prueba->num_curso);
+			limpiarFallidos(cursos);
+			aux->creditos=aux->creditos + prueba->cant_creditos;
 		}
-		aux=solucion;
+	}
+	cu=0;
+	//resto de los periodos
+	for(i=2;i<=cantPer;i++)
+	{
+		aux=appendPeriodo(solucion,i);
+		while(aux->creditos<=maxCr && ++cu<=maxCu)
+		{
+			prueba=buscarCurso(cursos);
+			if(aux->creditos+prueba->cant_creditos<=promCr)
+			{
+				appendCur(prueba->num_curso,aux);
+				marcarCurso(cursos,prueba->num_curso,0);
+				marcarPR(cursos,prueba->num_curso);
+				limpiarFallidos(cursos);
+				aux->creditos=aux->creditos + prueba->cant_creditos;
+			}
+		}
+		cu=0;
+	}
+	noAsignados=cursosNoAsignados(cursos);
+	aux=solucion;
+	if(noAsignados!=0)
+	{
+		for(i=1;i<=noAsignados;i++)
+		{
+			prueba=buscarCurso(cursos);
+			appendCur(prueba->num_curso,aux);
+			marcarCurso(cursos,prueba->num_curso,0);
+			marcarPR(cursos,prueba->num_curso);
+			aux->creditos=aux->creditos + prueba->cant_creditos;
+			aux=aux->sig;
+		}
 	}
 	return solucion;
+}
+
+int cursosNoAsignados(pCurso cursos)
+{
+	pCurso aux=cursos;
+	int i=0;
+	while(aux!=NULL)
+	{
+		if(aux->flag==1)
+			i++;
+		aux=aux->sig;
+	}
+	return i;
+}
+
+int mediaCreditos(pCurso cursos,malla m)
+{
+	pCurso aux=cursos;
+	float creditos=0,media;
+	while(aux!=NULL)
+	{
+		creditos=creditos+aux->cant_creditos;
+		aux=aux->sig;
+	}
+	media=creditos/getCantPeriodos(m);
+	return ceil(media);
 }
 
 void showCursos(pCurso cursos)
@@ -93,7 +136,7 @@ void showPrerrequisitos(pCurso cursos,int numero)
 	return;
 }
 
-void appendPeriodo(pSol solucion,int semestre)
+pSol appendPeriodo(pSol solucion,int semestre)
 {
 	//printf("entre a appendPeriodo\n");
 	pSol aux=solucion;
@@ -106,7 +149,7 @@ void appendPeriodo(pSol solucion,int semestre)
 		aux=aux->sig;
 	//if(aux->num_periodo!=1)
 		aux->sig=nuevo;
-	return;
+	return nuevo;
 }
 
 //funcion para crear curso unicamente con la
@@ -132,7 +175,7 @@ void mostrar(pSol solucion){
 		printf("Periodo: %d\n",aux->num_periodo);
 		aux2=aux->sigcur;
 		while(aux2!=NULL){
-			printf("%d  -", aux2->num_cur);
+			printf("%d  ", aux2->num_cur);
 			aux2=aux2->sigcur;
 		}
 		printf(": %d\n",aux->creditos);
@@ -157,14 +200,14 @@ void cosa(pCurso curso,int num)
 
 pCurso buscarCurso(pCurso cursos)
 {
-	//showCursos(cursos);
 	pCurso aux=cursos;
-	while(aux!=NULL){
+	while(aux!=NULL)
+	{
 		if(aux->flag==1 && aux->cant_prerrequisitos==0){
-			showPrerrequisitos(cursos,aux->num_curso);
 			return aux;
 		}
-		aux=aux->sig;
+		else
+			aux=aux->sig;
 	}
 	return NULL;
 }
@@ -176,9 +219,23 @@ void appendCur(int curso,pSol per_actual)
 	pCur nuevo=(pCur)malloc(sizeof(tipoCur));
 	nuevo->num_cur=curso;
 	nuevo->sigcur=NULL;
-	//printf("agregando el nuevo curso %d en el periodo %d\n",nuevo->num_cur,aux->num_periodo);
+	if(aux->sigcur==NULL)
+		aux->sigcur=nuevo;
+	else{
+		aux2=aux->sigcur;
+		while(aux2->sigcur!=NULL)
+			aux2=aux2->sigcur;
+		aux2->sigcur=nuevo;
+	}
+	return;
+	/*pSol aux=per_actual;
+	pCur aux2;
+	pCur nuevo=(pCur)malloc(sizeof(tipoCur));
+	nuevo->num_cur=curso;
+	nuevo->sigcur=NULL;
+	printf("agregando el nuevo curso %d en el periodo %d\n",nuevo->num_cur,aux->num_periodo);
 	if(aux->sigcur==NULL){
-		//printf("entre a agregar el primer curso ene l periodo %d\n",aux->num_periodo);
+		printf("entre a agregar el primer curso ene l periodo %d\n",aux->num_periodo);
 		aux->sigcur=nuevo;
 		return;
 	}
@@ -186,7 +243,7 @@ void appendCur(int curso,pSol per_actual)
 	while(aux2->sigcur!=NULL)
 		aux2=aux2->sigcur;
 	aux2->sigcur=nuevo;
-	return;
+	return;*/
 }
 
 void marcarCurso(pCurso cursos,int curso,int flag)
