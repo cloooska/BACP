@@ -9,24 +9,26 @@
 pSol SA(pSol inicial,malla m,pCurso cursos)
 {
 	pSol aux=inicial;
-	pSol nueva; //quizas deba hacerle malloc
+	pSol nueva,mejor;
 	limpiarGreedy(cursos);
 	int MaxCrSol=maxCreditosSolucion(inicial);
 	int T=MaxCrSol,t=0;
 	srand(time(NULL));
-	printf("cantidad de ramos periodo 1: %d\n",getCantRamos(inicial));
 	int cantPer = getCantPeriodos(m);
-	//mover(inicial,cantPer,cursos);
-	mostrar(inicial);
-	nueva=duplicarSol(inicial);
-	mostrar(nueva);
+	mejor=duplicarSol(inicial);
+	double eval,prob;
+	//mover(nueva,cantPer,cursos);
 	/*while(maxCreditosSolucion(aux)>=promCreditos(cursos,m))
 	{
 		while(t%10!=0)
 		{	
-			float prob = rand()%1000000;
+			prob = rand()%1000000;
 			prob=prob/1000000;
-			//nueva=mover ramo de periodo
+			nueva=mover(inicial,cantPer,cursos);
+			eval=exp(-abs(maxCreditosSolucion(nueva) - maxCreditosSolucion(inicial)/T);
+			if((maxCreditosSolucion(nueva) - maxCreditosSolucion(inicial)<=0)
+				mejor=nueva;
+			else if()
 			//ifs correspondientes
 		}
 		T++;
@@ -36,7 +38,7 @@ pSol SA(pSol inicial,malla m,pCurso cursos)
 
 int getCantCreditos(pCurso cursos, int num_curso)
 {
-	pCurso aux;
+	pCurso aux=cursos;
 	while(aux->num_curso!=num_curso)
 		aux=aux->sig;
 	return aux->cant_creditos;
@@ -46,46 +48,69 @@ pSol mover(pSol solucion,int cantPer,pCurso cursos)
 {
 	pSol periodo1=solucion,periodo2=solucion;
 	pCur aMover,anterior,aux;
+	int i=1;
 	srand(time(NULL));
 	cantPer--;
-	//desde donde periodo1
-	int deDonde = rand()%cantPer-1;
+	//periodo 1: desde donde se sacará un ramo
+	int deDonde = rand()%cantPer;
 	deDonde++;
 	while(periodo1->num_periodo!=deDonde)
 		periodo1=periodo1->sig;
-	printf("periodo1= %d\n", periodo1->num_periodo);
 	int cantRamos=getCantRamos(periodo1);
-	//ramo
+	//en caso de que el periodo elegido no tenga ramos elegir uno nuevo
+	while(cantRamos==0)
+	{
+		deDonde = rand()%cantPer-1;
+		deDonde++;
+		while(periodo1->num_periodo!=deDonde)
+			periodo1=periodo1->sig;
+		cantRamos=getCantRamos(periodo1);
+	}
+	//periodo 2: hacia donde moveremos el ramo
+	int paraDonde =rand()%cantPer;
+	paraDonde++;
+	while(periodo2->num_periodo!=paraDonde)
+		periodo2=periodo2->sig;
+	//ramo a mover
 	int ramo=rand()%cantRamos-1;
 	ramo++;
-	if(cantRamos!=0)
+	//caso especial: cuando es el primer ramo en la lista
+	if(ramo==0)
 	{
 		aMover=periodo1->sigcur;
-		for(int i=1;i<=ramo;i++)
+		periodo1->sigcur=NULL;
+	}
+	//caso de que no sea el primer ramo
+	else
+	{
+		aMover=periodo1->sigcur;
+		for(i=0;i<ramo;i++)
 		{
 			anterior=aMover;
 			aMover=aMover->sigcur;
 		}
-		printf("aMover: %d\n", aMover->num_cur);
-		printf("anterior: %d\n", anterior->num_cur);
+		anterior->sigcur=aMover->sigcur;
+		aMover->sigcur=NULL;
 	}
-	//para donde periodo2
-	int paraDonde =rand()%cantPer-1;
-	paraDonde++;
-	while(periodo2->num_periodo!=paraDonde)
-		periodo2=periodo2->sig;
-	printf("periodo2= %d\n", periodo2->num_periodo);
-	//hacer el cambio
-	anterior=aMover->sigcur;
-	aux=periodo2->sigcur;
-	while(aux->sigcur!=NULL)
-		aux=aux->sigcur;
-	printf("desde aquí hay violación de segmento\n");
-	aux->sigcur=aMover;
-	aMover->sigcur=NULL;
-	int creditos=getCantCreditos(cursos,aMover->num_cur);
-	periodo1->creditos=periodo1->creditos-creditos;
-	periodo2->creditos=periodo2->creditos+creditos;
+	//aplicar el movimiento
+	//caso especial: cuando la lista de cursos del periodo 2 está vacía
+	if(periodo2->sigcur==NULL)
+	{
+		periodo2->sigcur=aMover;
+		aMover->sigcur=NULL;
+	}
+	//en caso de que existan cursos en la lista del periodo 2
+	else
+	{
+		aux=periodo2->sigcur;
+		while(aux->sigcur!=NULL)
+			aux=aux->sigcur;
+		aux->sigcur=aMover;
+		aMover->sigcur=NULL;
+	}
+	//reajustar los creditos de los periodos modificados
+	periodo1->creditos= periodo1->creditos - getCantCreditos(cursos,aMover->num_cur);
+	periodo2->creditos= periodo2->creditos + getCantCreditos(cursos,aMover->num_cur);
 	return solucion;
 }
 
@@ -100,6 +125,8 @@ pSol duplicarSol(pSol solucion)
 	pCur dCur=(pCur)malloc(sizeof(tipoCur));
 	pCur aux2;
 	pSol actual;
+	pCur dCur2;
+	pCur dCur3;
 	//primer periodo
 	if(aux->sigcur!=NULL)
 	{
@@ -107,12 +134,15 @@ pSol duplicarSol(pSol solucion)
 		dCur->num_cur=aux2->num_cur;
 		dCur->sigcur=NULL;
 		duplicada->sigcur=dCur;
+		aux2=aux2->sigcur;
 		while(aux2!=NULL)
 		{
-			pCur dCur2=(pCur)malloc(sizeof(tipoCur));
+			dCur2=(pCur)malloc(sizeof(tipoCur));
 			dCur2->num_cur=aux2->num_cur;
 			dCur2->sigcur=NULL;
+			dCur->sigcur=dCur2;
 			aux2=aux2->sigcur;
+			dCur=dCur->sigcur;
 		}
 	}
 	aux=aux->sig;
@@ -124,16 +154,19 @@ pSol duplicarSol(pSol solucion)
 		if(aux->sigcur!=NULL)
 		{
 			aux2=aux->sigcur;
-			pCur dCur3=(pCur)malloc(sizeof(tipoCur));
+			dCur3=(pCur)malloc(sizeof(tipoCur));
 			dCur3->num_cur=aux2->num_cur;
 			dCur3->sigcur=NULL;
 			actual->sigcur=dCur3;
+			aux2=aux2->sigcur;
 			while(aux2!=NULL)
 			{
-				pCur dCur2=(pCur)malloc(sizeof(tipoCur));
+				dCur2=(pCur)malloc(sizeof(tipoCur));
 				dCur2->num_cur=aux2->num_cur;
 				dCur2->sigcur=NULL;
+				dCur3->sigcur=dCur2;
 				aux2=aux2->sigcur;
+				dCur3=dCur3->sigcur;
 			}
 		}
 		aux=aux->sig;
