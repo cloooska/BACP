@@ -4,13 +4,16 @@ LFLAGS = -Wall
 
 all: main
 
-main: greedy.o main.o general.o
+main: greedy.o main.o general.o sa.o
 	$(CC) $(LFLAGS) $^ -o $@
 
 greedy.o: greedy.c
 	$(CC) $(CFLAGS) $<
 
 general.o: general.c
+	$(CC) $(CFLAGS) $<
+
+sa.o: sa.c
 	$(CC) $(CFLAGS) $<
 
 main.o: main.c

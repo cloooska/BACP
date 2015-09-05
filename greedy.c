@@ -147,8 +147,7 @@ pSol appendPeriodo(pSol solucion,int semestre)
 	nuevo->sigcur=NULL;
 	while(aux->sig!=NULL)
 		aux=aux->sig;
-	//if(aux->num_periodo!=1)
-		aux->sig=nuevo;
+	aux->sig=nuevo;
 	return nuevo;
 }
 
@@ -184,20 +183,6 @@ void mostrar(pSol solucion){
 	return;
 }
 
-void cosa(pCurso curso,int num)
-{
-	pCurso aux=curso;
-	pPR aux2;
-	while(aux->num_curso!=num)
-		aux=aux->sig;
-	aux2=aux->sigPR;
-	while(aux2!=NULL){
-		printf("el curso %d tiene el pr: %d\n",aux->num_curso,aux2->num_curso);
-		aux2=aux2->sig;
-	}
-	return;
-}
-
 pCurso buscarCurso(pCurso cursos)
 {
 	pCurso aux=cursos;
@@ -228,22 +213,6 @@ void appendCur(int curso,pSol per_actual)
 		aux2->sigcur=nuevo;
 	}
 	return;
-	/*pSol aux=per_actual;
-	pCur aux2;
-	pCur nuevo=(pCur)malloc(sizeof(tipoCur));
-	nuevo->num_cur=curso;
-	nuevo->sigcur=NULL;
-	printf("agregando el nuevo curso %d en el periodo %d\n",nuevo->num_cur,aux->num_periodo);
-	if(aux->sigcur==NULL){
-		printf("entre a agregar el primer curso ene l periodo %d\n",aux->num_periodo);
-		aux->sigcur=nuevo;
-		return;
-	}
-	aux2=aux->sigcur;
-	while(aux2->sigcur!=NULL)
-		aux2=aux2->sigcur;
-	aux2->sigcur=nuevo;
-	return;*/
 }
 
 void marcarCurso(pCurso cursos,int curso,int flag)

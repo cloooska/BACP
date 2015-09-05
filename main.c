@@ -96,9 +96,9 @@ int main(int argc,char *argv[])
 			aux2->sig=nuevo_pr;
 		}
 	}
-	//cosa(raiz_cursos,6);
 	pSol hola=Greedy2(m,raiz_cursos);
 	mostrar(hola);
+	pSol hola2=SA(hola,m,raiz_cursos);
 	free(raiz_cursos);
 	free(nuevo);
 	free(nuevo_pr);
