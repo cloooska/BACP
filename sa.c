@@ -10,29 +10,31 @@ pSol SA(pSol inicial,malla m,pCurso cursos)
 {
 	limpiarGreedy(cursos);
 	int MaxCrSol=maxCreditosSolucion(inicial);
-	int T=MaxCrSol,t=0;
+	int T=MaxCrSol,t=1;
 	srand(time(NULL));
 	int cantPer = getCantPeriodos(m);
 	pSol nueva=duplicarSol(inicial);
 	pSol mejor=duplicarSol(inicial);
 	pSol actual=duplicarSol(inicial);
 	double deltaEval,prob;
-	T=0;
-	//mover(nueva,cantPer,cursos);
-	while(maxCreditosSolucion(mejor) >= mediaCreditos(cursos,m)+3)
+	while(maxCreditosSolucion(mejor) >= mediaCreditos(cursos,m))
 	{
+		printf("entre\n");
 		while(t%100!=0)
 		{	
 			prob = rand()%1000000;
 			prob=prob/1000000;
 			nueva=mover(nueva,cantPer,cursos);
 			deltaEval=maxCreditosSolucion(nueva) - maxCreditosSolucion(actual);
-			if(deltaEval<=0)
+			if(deltaEval<0)
 			{
+				printf("entre a mejor\n");
 				mejor=duplicarSol(nueva);
+				mostrar(mejor);
 			}
 			else
 			{
+				printf("entre a peor\n");
 				if(exp(-deltaEval/T)>=prob)
 				{
 					actual=nueva;

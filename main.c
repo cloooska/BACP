@@ -26,7 +26,7 @@ int main(int argc,char *argv[])
 	pCurso raiz_cursos,nuevo;
 	pCurso aux = (pCurso)malloc(sizeof(tipoCurso));
 	m = (malla)malloc(sizeof(General));
-	instancia=fopen("bacp10.txt","r");
+	instancia=fopen("instances12/inst43.txt","r");
 	if (instancia == NULL)
 	{
 		printf("El archivo 'bacp10.txt' no se encuentra accesible. Favor revisar su disponibilidad.\n");
