@@ -7,6 +7,7 @@
  */
 #include "Librerias/general.h"
 #include "Librerias/greedy.h"
+#include "Librerias/sa.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -98,7 +99,9 @@ int main(int argc,char *argv[])
 	}
 	pSol hola=Greedy2(m,raiz_cursos);
 	mostrar(hola);
+	printf("-------------------------\n");
 	pSol hola2=SA(hola,m,raiz_cursos);
+	mostrar(hola2);
 	free(raiz_cursos);
 	free(nuevo);
 	free(nuevo_pr);

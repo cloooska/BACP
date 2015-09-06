@@ -8,32 +8,40 @@
 
 pSol SA(pSol inicial,malla m,pCurso cursos)
 {
-	pSol aux=inicial;
-	pSol nueva,mejor;
 	limpiarGreedy(cursos);
 	int MaxCrSol=maxCreditosSolucion(inicial);
 	int T=MaxCrSol,t=0;
 	srand(time(NULL));
 	int cantPer = getCantPeriodos(m);
-	mejor=duplicarSol(inicial);
-	double eval,prob;
+	pSol nueva=duplicarSol(inicial);
+	pSol mejor=duplicarSol(inicial);
+	pSol actual=duplicarSol(inicial);
+	double deltaEval,prob;
 	//mover(nueva,cantPer,cursos);
-	/*while(maxCreditosSolucion(aux)>=promCreditos(cursos,m))
+	while(maxCreditosSolucion(mejor) >= mediaCreditos(cursos,m)+2)
 	{
 		while(t%10!=0)
 		{	
 			prob = rand()%1000000;
 			prob=prob/1000000;
-			nueva=mover(inicial,cantPer,cursos);
-			eval=exp(-abs(maxCreditosSolucion(nueva) - maxCreditosSolucion(inicial)/T);
-			if((maxCreditosSolucion(nueva) - maxCreditosSolucion(inicial)<=0)
-				mejor=nueva;
-			else if()
-			//ifs correspondientes
+			nueva=mover(nueva,cantPer,cursos);
+			deltaEval=maxCreditosSolucion(nueva) - maxCreditosSolucion(actual);
+			if(deltaEval<=0)
+			{
+				mejor=duplicarSol(nueva);
+			}
+			else
+			{
+				if(exp(-deltaEval/T)>=prob)
+				{
+					actual=nueva;
+				}
+			}
+			t++;
 		}
 		T++;
-	}*/
-	return inicial;
+	}
+	return mejor;
 }
 
 int getCantCreditos(pCurso cursos, int num_curso)

@@ -14,5 +14,6 @@ void showCursos(pCurso cursos);							//Muestra la lista de cursos
 void showPrerrequisitos(pCurso cursos,int numero);		//Muestra los prerrequisitos del curso cursos
 int mediaCreditos(pCurso cursos,malla m);				//Retorna el promedio de creditos de la malla
 int cursosNoAsignados(pCurso cursos);					//retorna la cantidad de cursos no asignados aún a la solución del Greedy
+pSol periodoMenorCreditos(pSol solucion);				//retorna el periodo con menor cantidad de creditos
 
 #endif

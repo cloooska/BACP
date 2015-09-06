@@ -64,7 +64,7 @@ pSol Greedy2(malla m,pCurso cursos)
 		cu=0;
 	}
 	noAsignados=cursosNoAsignados(cursos);
-	aux=solucion;
+	aux=periodoMenorCreditos(solucion);
 	if(noAsignados!=0)
 	{
 		for(i=1;i<=noAsignados;i++)
@@ -74,10 +74,30 @@ pSol Greedy2(malla m,pCurso cursos)
 			marcarCurso(cursos,prueba->num_curso,0);
 			marcarPR(cursos,prueba->num_curso);
 			aux->creditos=aux->creditos + prueba->cant_creditos;
-			aux=aux->sig;
+			aux=periodoMenorCreditos(solucion);
 		}
 	}
 	return solucion;
+}
+
+pSol periodoMenorCreditos(pSol solucion)
+{
+	pSol aux=solucion;
+	int mejorPeriodo=aux->num_periodo;
+	int mejorCredito=aux->creditos;
+	while(aux!=NULL)
+	{
+		if(mejorCredito>aux->creditos)
+		{
+			mejorPeriodo=aux->num_periodo;
+			mejorCredito=aux->creditos;
+		}
+		aux=aux->sig;
+	}
+	aux=solucion;
+	while(aux->num_periodo!=mejorPeriodo)
+		aux=aux->sig;
+	return aux;
 }
 
 int cursosNoAsignados(pCurso cursos)
