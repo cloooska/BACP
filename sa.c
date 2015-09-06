@@ -17,10 +17,11 @@ pSol SA(pSol inicial,malla m,pCurso cursos)
 	pSol mejor=duplicarSol(inicial);
 	pSol actual=duplicarSol(inicial);
 	double deltaEval,prob;
+	T=0;
 	//mover(nueva,cantPer,cursos);
-	while(maxCreditosSolucion(mejor) >= mediaCreditos(cursos,m)+2)
+	while(maxCreditosSolucion(mejor) >= mediaCreditos(cursos,m)+3)
 	{
-		while(t%10!=0)
+		while(t%100!=0)
 		{	
 			prob = rand()%1000000;
 			prob=prob/1000000;
