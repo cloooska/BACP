@@ -1,6 +1,6 @@
 CC     = gcc
-CFLAGS = -Wall -c
-LFLAGS = -Wall
+CFLAGS = -Wall -c -g
+LFLAGS = -Wall -lm
 
 all: main
 

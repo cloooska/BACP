@@ -20,7 +20,7 @@ pSol SA(pSol inicial,malla m,pCurso cursos)
 	while(maxCreditosSolucion(mejor) >= mediaCreditos(cursos,m))
 	{
 		while(t%100!=0)
-		{	
+		{
 			prob = rand()%1000000;
 			prob=prob/1000000;
 			nueva=mover(nueva,cantPer,cursos);
@@ -73,7 +73,7 @@ pSol mover(pSol solucion,int cantPer,pCurso cursos)
 	{
 		deDonde = rand()%cantPer-1;
 		deDonde++;
-		while(periodo1->num_periodo!=deDonde)
+		while(periodo1 && periodo1->num_periodo!=deDonde)
 			periodo1=periodo1->sig;
 		cantRamos=getCantRamos(periodo1);
 	}
@@ -189,11 +189,12 @@ int getCantRamos(pSol periodo)
 {
 	pCur aux;
 	int i=0;
-	if(periodo->sigcur==NULL)
+	if(periodo && periodo->sigcur==NULL)
 		return 0;
 	else
 	{
-		aux=periodo->sigcur;
+
+		aux=periodo ? periodo->sigcur : NULL;
 		while(aux!=NULL)
 		{
 			i++;
