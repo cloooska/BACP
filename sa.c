@@ -19,14 +19,14 @@ pSol SA(pSol inicial,malla m,pCurso cursos)
 	double deltaEval,prob;
 	while(maxCreditosSolucion(mejor) >= mediaCreditos(cursos,m))
 	{
-		printf("entre\n");
 		while(t%100!=0)
 		{	
 			prob = rand()%1000000;
 			prob=prob/1000000;
 			nueva=mover(nueva,cantPer,cursos);
+			mostrar(nueva);
 			deltaEval=maxCreditosSolucion(nueva) - maxCreditosSolucion(actual);
-			if(deltaEval<0)
+			if(deltaEval<=0)
 			{
 				printf("entre a mejor\n");
 				mejor=duplicarSol(nueva);
