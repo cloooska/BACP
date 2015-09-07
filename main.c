@@ -29,7 +29,7 @@ int main(int argc,char *argv[])
 	pCurso raiz_cursos,nuevo;
 	pCurso aux = (pCurso)malloc(sizeof(tipoCurso));
 	m = (malla)malloc(sizeof(General));
-	instancia=fopen("instances12/inst12.txt","r");
+	instancia=fopen("bacp10.txt","r");
 	if (instancia == NULL)
 	{
 		printf("El archivo 'inst12.txt' no se encuentra accesible. Favor revisar su disponibilidad.\n");
