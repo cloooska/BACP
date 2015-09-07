@@ -18,6 +18,9 @@ FILE *instancia;
 
 int main(int argc,char *argv[])
 {
+	clock_t start,end;
+	double tiempo;
+	start=clock();
 	malla m;
 	pPR nuevo_pr=(pPR)malloc(sizeof(tipoPR));
 	int i,j,a,b;
@@ -26,10 +29,10 @@ int main(int argc,char *argv[])
 	pCurso raiz_cursos,nuevo;
 	pCurso aux = (pCurso)malloc(sizeof(tipoCurso));
 	m = (malla)malloc(sizeof(General));
-	instancia=fopen("instances12/inst43.txt","r");
+	instancia=fopen("instances12/inst12.txt","r");
 	if (instancia == NULL)
 	{
-		printf("El archivo 'bacp10.txt' no se encuentra accesible. Favor revisar su disponibilidad.\n");
+		printf("El archivo 'inst12.txt' no se encuentra accesible. Favor revisar su disponibilidad.\n");
 		return 1;
 	}
 	//leer la primera linea de la instancia
@@ -98,10 +101,15 @@ int main(int argc,char *argv[])
 		}
 	}
 	pSol hola=Greedy2(m,raiz_cursos);
-	mostrar(hola);
-	printf("-------------------------\n");
+	//mostrar(hola);
+	//printf("-------------------------\n");
 	pSol hola2=SA(hola,m,raiz_cursos);
+	printf("Salida instancia inst12.txt\n");
 	mostrar(hola2);
+	//printf("Maxima carga academica%d",maxCreditosSolucion(hola2);
+	end=clock();
+	tiempo=((double)(end-start))/CLOCKS_PER_SEC;
+	printf("Tiempo de ejecucion %f s\n",tiempo );
 	free(raiz_cursos);
 	free(nuevo);
 	free(nuevo_pr);

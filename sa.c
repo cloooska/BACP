@@ -17,16 +17,17 @@ pSol SA(pSol inicial,malla m,pCurso cursos)
 	pSol mejor=duplicarSol(inicial);
 	pSol actual=duplicarSol(inicial);
 	double deltaEval,prob;
-	while(maxCreditosSolucion(mejor) >= mediaCreditos(cursos,m))
+	while(maxCreditosSolucion(mejor) > mediaCreditos(cursos,m) && exp(-deltaEval/T)!=1)
 	{
 		while(t%100!=0)
 		{
+			//printf("t= %d\n", t%100);
 			prob = rand()%1000000;
 			prob=prob/1000000;
 			nueva=mover(nueva,cantPer,cursos);
-			mostrar(nueva);
+			//mostrar(nueva);
 			deltaEval=maxCreditosSolucion(nueva) - maxCreditosSolucion(actual);
-			if(deltaEval<=0)
+			if(deltaEval<0)
 			{
 				printf("entre a mejor\n");
 				mejor=duplicarSol(nueva);
@@ -34,14 +35,17 @@ pSol SA(pSol inicial,malla m,pCurso cursos)
 			}
 			else
 			{
-				printf("entre a peor\n");
-				if(exp(-deltaEval/T)>=prob)
+				
+				if(exp(-deltaEval/T) <= prob)
 				{
 					actual=nueva;
+					//printf("entre a peor %f < %f\n",exp(-deltaEval/T),prob);
 				}
 			}
 			t++;
 		}
+		//printf("T= %d\n", T);
+		t=1;
 		T++;
 	}
 	return mejor;
@@ -71,8 +75,9 @@ pSol mover(pSol solucion,int cantPer,pCurso cursos)
 	//en caso de que el periodo elegido no tenga ramos elegir uno nuevo
 	while(cantRamos==0)
 	{
-		deDonde = rand()%cantPer-1;
+		deDonde = rand()%cantPer;
 		deDonde++;
+		periodo1=solucion;
 		while(periodo1 && periodo1->num_periodo!=deDonde)
 			periodo1=periodo1->sig;
 		cantRamos=getCantRamos(periodo1);
