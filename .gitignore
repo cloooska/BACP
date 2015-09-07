@@ -45,3 +45,5 @@ sftp-config.json
 
 *.dSYM
 main
+
+*.o
